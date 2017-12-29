@@ -1,16 +1,19 @@
-from flask import Flask
-from flask_moment import Moment
+from flask import Flask, render_template
+from flask_bootstrap import Bootstrap
 import feedparser
 
 
 app = Flask(__name__)
-moment = Moment(app)
+bootstrap = Bootstrap(app)
 
 NEWS_FEEDS = {
     "MKINI_TERKINI": "https://www.malaysiakini.com/my/news.rss",
     "MKINI_KOLUMNIS": "https://www.malaysiakini.com/my/columns.rss",
     "THESTAR_EDITOR": "https://www.thestar.com.my/rss/editors-choice/main/",
-    "THESTAR_NATION": "https://www.thestar.com.my/rss/news/nation/" 
+    "THESTAR_NATION": "https://www.thestar.com.my/rss/news/nation/",
+    "TMI_ENGLISH": "https://www.themalaysianinsight.com/rss/all/",
+    "TMI_BAHASA": "https://www.themalaysianinsight.com/bahasa/rss/all/",
+    "FMT": "http://www.freemalaysiatoday.com/feed/"
 }
 
 
@@ -31,23 +34,26 @@ def thestar_editor():
 def thestar_nation():
     return get_news("THESTAR_NATION")
 
+@app.route("/tmi/en")
+def tmi_english():
+    return get_news("TMI_ENGLISH")
+
+@app.route("/tmi/bm")
+def tmi_bahasa():
+    return get_news("TMI_BAHASA")
+
+@app.route("/fmt")
+def fmt():
+    return get_news("FMT")
+
 
 def get_news(publication):
     feed = feedparser.parse(NEWS_FEEDS[publication])
-    first_article = feed['entries'][0]
-    channel_title = feed['channel']
+    articles = feed['entries']
+    channel = feed['channel']['title']
+           
+    return render_template("index.html", articles=articles, channel=channel)
     
-    return """
-            <html>
-                <body>
-                    <h1>{0} Headlines</h1>
-                    <a href={1} target="_blank"><b>{2}</b></a><br>
-                    <i>{3}</id>
-                    <p>{4}</p>
-                </body>
-            </html>
-           """.format(channel_title.get("title"), first_article.get("link"), first_article.get("title"), first_article.get("published"), first_article.get("summary"))
-
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
