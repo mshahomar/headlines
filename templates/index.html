@@ -21,6 +21,11 @@
 
 {% block title %}MY Headliners{% endblock %}
 
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment() }}
+{% endblock %}
+
 {% block navbar %}
     <div class="navbar navbar-inverse" role="navigation">
         <div class="container">
@@ -53,11 +58,13 @@
         <div class="page-header"><h1>{{ channel }} Headlines</h1></div><br>
             {% for article in articles %}
                 <div class="list-group">
-                    <a href="{{ article['link'] }}" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <a href="{{ article.link }}" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start">
                         <div class="d-flex w-100 justify-content-between">
-                        <h2 class="mb-1 display-2">{{ article['title'] }}</h2>
+                            <h2 class="mb-1 display-2">{{ article.title|safe }}</h2>
+                            <small>Published Date: {{ article.published }}</small>
                         </div>
-                        <p class="mb-1">{{ article['summary']|safe }}</p>
+                        <p class="mb-1">{{ article.summary|safe }}</p>
+                        <i><small>{{ moment().fromNow(refresh=True) }}</small></i>
                     </a>
                 </div>
             {% endfor %}

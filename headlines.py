@@ -1,10 +1,12 @@
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
+from flask_moment import Moment
 import feedparser
 
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
+moment = Moment(app)
 
 NEWS_FEEDS = {
     "MKINI_TERKINI": "https://www.malaysiakini.com/my/news.rss",
@@ -51,7 +53,7 @@ def get_news(publication):
     feed = feedparser.parse(NEWS_FEEDS[publication])
     articles = feed['entries']
     channel = feed['channel']['title']
-           
+               
     return render_template("index.html", articles=articles, channel=channel)
     
 
