@@ -55,7 +55,15 @@
 
 {% block content %}
     <div class="container">
-        <div class="page-header"><h1>{{ channel }} Headlines</h1></div><br>
+        <div class="page-header">
+            <h1>{{ channel }} Headlines</h1>
+            <form class="form-inline">
+                <div class="form-group mb-2">
+                    <input type="text" name="publication" placeholder="Search" class="form-control">
+                    <input type="submit" value="Submit" class="btn btn-primary mb-2">
+                </div>
+            </form>
+        </div>
             {% for article in articles %}
                 <div class="list-group">
                     <a href="{{ article.link }}" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start">

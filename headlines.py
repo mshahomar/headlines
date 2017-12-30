@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 import feedparser
@@ -17,6 +17,9 @@ NEWS_FEEDS = {
     "TMI_BAHASA": "https://www.themalaysianinsight.com/bahasa/rss/all/",
     "FMT": "http://www.freemalaysiatoday.com/feed/"
 }
+
+publishers = list(publisher.title() for publisher in  NEWS_FEEDS.keys())
+
 
 
 @app.route("/")
@@ -50,10 +53,17 @@ def fmt():
 
 
 def get_news(publication):
+    query = request.args.get("publication")
+    print(query)
+    if not query or query not in NEWS_FEEDS:
+        publication
+    else:
+        publication = query
+    
     feed = feedparser.parse(NEWS_FEEDS[publication])
     articles = feed['entries']
     channel = feed['channel']['title']
-               
+    
     return render_template("index.html", articles=articles, channel=channel)
     
 
