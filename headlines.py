@@ -21,7 +21,8 @@ NEWS_FEEDS = {
     "FMT": "http://www.freemalaysiatoday.com/feed/"
 }
 
-WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid=a5ebfde13305fd3c4a6ef3d2bef29a47"
+
+WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid="
 DEFAULTS = {"city": "Kuala Selangor", "publication": "MKINI_TERKINI"}
 
 publishers = list(publisher.title() for publisher in  NEWS_FEEDS.keys())
