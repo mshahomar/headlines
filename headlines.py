@@ -1,5 +1,4 @@
-from flask import (Flask, render_template, 
-                  request, make_response)
+from flask import Flask, render_template, request, make_response
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 import datetime
@@ -31,7 +30,8 @@ NEWS_FEEDS = {
 WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid=" + OWM_APPID
 CURRENCY_URL = "https://openexchangerates.org/api/latest.json?app_id=" + OER_APPID
 
-DEFAULTS = {"city": "Kuala Selangor", "publication": "MKINI_TERKINI", "currency_from": "MYR", "currency_to": "IRR"}
+DEFAULTS = {"city": "Kuala Selangor", "publication": "MKINI_TERKINI", 
+            "currency_from": "MYR", "currency_to": "IRR"}
 
 publishers = list(publisher.title() for publisher in  NEWS_FEEDS.keys())
 
