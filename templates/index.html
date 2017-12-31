@@ -41,12 +41,6 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-nav-text">
                     <li><a href="/">Home</a></li>
-                    <li><a href="{{ url_for('mkini_kolumnis') }}">Malaysia Kini Kolumnis</a></li>
-                    <li><a href="{{ url_for('thestar_editor') }}">TheStar Editors' Picks</a></li>
-                    <li><a href="{{ url_for('thestar_nation') }}">TheStar Nation</a></li>
-                    <li><a href="{{ url_for('tmi_english') }}">TMI English</a></li>
-                    <li><a href="{{ url_for('tmi_bahasa') }}">TMI Bahasa</a></li>
-                    <li><a href="{{ url_for('fmt') }}">FMT</a></li>
                 </ul>
             </div>
         </div>
@@ -56,10 +50,19 @@
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h1>{{ channel }} Headlines</h1>
+            <h1 class="display-1">Headlines</h1>
+            <h2 class="display-2">Current Weather</h2>
             <form class="form-inline">
                 <div class="form-group mb-2">
-                    <input type="text" name="publication" placeholder="Search" class="form-control">
+                    <input type="text" name="city" placeholder="Weather Search" class="form-control">
+                    <input type="submit" value="Submit" class="btn btn-info mb-2">
+                </div>
+            </form>
+            <p>City: <b>{{ weather.city }}, {{ weather.country }}</b>&nbsp;&nbsp;|&nbsp;&nbsp;
+            {{ weather.description|title }} ({{ weather.temperature }}&#8451;)</p>
+            <form class="form-inline">
+                <div class="form-group mb-2">
+                    <input type="text" name="publication" placeholder="Search News Feed" class="form-control">
                     <input type="submit" value="Submit" class="btn btn-primary mb-2">
                 </div>
             </form>
