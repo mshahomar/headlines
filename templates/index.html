@@ -4,9 +4,18 @@
     {{ super() }}
     <link href="https://fonts.googleapis.com/css?family=Slabo+27px&effect=shadow-multiple" rel="stylesheet">
     <style>
+        html {
+            background: white;
+        }
         body {
             font-family: 'Slabo 27px', serif;
-            font-size: 22px;
+            font-size: 20px;
+            background: lightgray;
+            margin: auto;
+        }
+        #header {
+            background: lightsteelblue;
+            padding: 10px 20px 10px 20px;
         }
         .navbar-brand-text {
             text-shadow: 2px 2px 2px rgb(233, 233, 233);
@@ -49,8 +58,9 @@
 
 {% block content %}
     <div class="container">
-        <div class="page-header">
+        <div class="page-header" id="header">
             <h1 class="display-1">Headlines</h1>
+            <p>Giving you the latest Headlines, Currency and Weather.</p>
             <div>
                 <h2 class="display-2">Current Weather</h2>
                 <p>City: <b>{{ weather.city }}, {{ weather.country }}</b>&nbsp;&nbsp;|&nbsp;&nbsp;

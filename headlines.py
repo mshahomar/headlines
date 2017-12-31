@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request
+from flask import (Flask, render_template, 
+                  request, make_response)
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
+import datetime
 import urllib.parse as url_parse
 import urllib.request as url_request
 import feedparser
@@ -33,19 +35,22 @@ DEFAULTS = {"city": "Kuala Selangor", "publication": "MKINI_TERKINI", "currency_
 
 publishers = list(publisher.title() for publisher in  NEWS_FEEDS.keys())
 
+def get_value_with_fallback(key):
+    if request.args.get(key):
+        return request.args.get(key)
+    if request.cookies.get(key):
+        return request.cookies.get(key)
+    return DEFAULTS[key]
+
 
 @app.route("/")
 def home():
     # Get News Publication
-    publication = request.args.get("publication")
-    if not publication:
-        publication = DEFAULTS["publication"]
+    publication = get_value_with_fallback("publication")
     articles = get_news(publication)
 
     # Get City for weather data
-    city = request.args.get("city")
-    if not city:
-        city = DEFAULTS["city"]
+    city = get_value_with_fallback("city")
     weather = get_weather(city)
 
     # Get Currency data, and verify currency_from and currency_to
@@ -58,8 +63,14 @@ def home():
         currency_to = DEFAULTS["currency_to"]
     rate = get_rates(currency_frm, currency_to)
 
-    return render_template("index.html", articles=articles, weather=weather, 
-            rate=rate, currency_from=currency_frm, currency_to=currency_to)
+    response = make_response(render_template("index.html", articles=articles, 
+                weather=weather, rate=rate, currency_from=currency_frm, 
+                currency_to=currency_to))
+    expires = datetime.datetime.now() + datetime.timedelta(days=365)
+    response.set_cookie("publication", publication, expires=expires)
+    response.set_cookie("city", city, expires=expires)
+
+    return response
 
 
 @app.route("/")
