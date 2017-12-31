@@ -51,21 +51,33 @@
     <div class="container">
         <div class="page-header">
             <h1 class="display-1">Headlines</h1>
-            <h2 class="display-2">Current Weather</h2>
-            <form class="form-inline">
-                <div class="form-group mb-2">
-                    <input type="text" name="city" placeholder="Weather Search" class="form-control">
-                    <input type="submit" value="Submit" class="btn btn-info mb-2">
-                </div>
-            </form>
-            <p>City: <b>{{ weather.city }}, {{ weather.country }}</b>&nbsp;&nbsp;|&nbsp;&nbsp;
-            {{ weather.description|title }} ({{ weather.temperature }}&#8451;)</p>
-            <form class="form-inline">
-                <div class="form-group mb-2">
-                    <input type="text" name="publication" placeholder="Search News Feed" class="form-control">
-                    <input type="submit" value="Submit" class="btn btn-primary mb-2">
-                </div>
-            </form>
+            <div>
+                <h2 class="display-2">Current Weather</h2>
+                <p>City: <b>{{ weather.city }}, {{ weather.country }}</b>&nbsp;&nbsp;|&nbsp;&nbsp;
+                    {{ weather.description|title }} ({{ weather.temperature }}&#8451;)</p>
+                <form class="form-inline">
+                    <div class="form-group mb-2">
+                        <input type="text" name="city" placeholder="Weather Search" class="form-control">
+                        <input type="submit" value="Submit" class="btn btn-info mb-2">
+                    </div>
+                </form>
+            </div><br>
+            <div>
+                <h2 class="display-2">Currency</h2>
+                1 {{ currency_from }} = {{ currency_to }}  {{ rate }}
+            </div><br>
+            <div>
+                <h3 class="display-3">Search News Publisher:</h3>
+                <form class="form-inline">
+                    <div class="form-group mb-2">
+                        <input type="text" name="publication" placeholder="Search News Feed" class="form-control">
+                        <input type="submit" value="Submit" class="btn btn-primary mb-2">
+                    </div>
+                </form>
+            </div>
+            <div>
+                <h2></h2>
+            </div>
         </div>
             {% for article in articles %}
                 <div class="list-group">

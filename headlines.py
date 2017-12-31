@@ -1,15 +1,20 @@
 from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
+import urllib.parse as url_parse
+import urllib.request as url_request
 import feedparser
 import json
-from urllib import parse as url_parse
-from urllib import request as url_request
+
+from helper import get_app_id
 
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 moment = Moment(app)
+
+OWM_APPID = get_app_id(".openweathermap")
+OER_APPID = get_app_id(".openexchangerates")
 
 NEWS_FEEDS = {
     "MKINI_TERKINI": "https://www.malaysiakini.com/my/news.rss",
@@ -21,9 +26,10 @@ NEWS_FEEDS = {
     "FMT": "http://www.freemalaysiatoday.com/feed/"
 }
 
+WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid=" + OWM_APPID
+CURRENCY_URL = "https://openexchangerates.org/api/latest.json?app_id=" + OER_APPID
 
-WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid="
-DEFAULTS = {"city": "Kuala Selangor", "publication": "MKINI_TERKINI"}
+DEFAULTS = {"city": "Kuala Selangor", "publication": "MKINI_TERKINI", "currency_from": "MYR", "currency_to": "IRR"}
 
 publishers = list(publisher.title() for publisher in  NEWS_FEEDS.keys())
 
@@ -42,7 +48,18 @@ def home():
         city = DEFAULTS["city"]
     weather = get_weather(city)
 
-    return render_template("index.html", articles=articles, weather=weather)
+    # Get Currency data, and verify currency_from and currency_to
+    currency_frm = request.args.get("currency_from")
+    if not currency_frm:
+        currency_frm = DEFAULTS["currency_from"]
+
+    currency_to = request.args.get("currency_to")
+    if not currency_to:
+        currency_to = DEFAULTS["currency_to"]
+    rate = get_rates(currency_frm, currency_to)
+
+    return render_template("index.html", articles=articles, weather=weather, 
+            rate=rate, currency_from=currency_frm, currency_to=currency_to)
 
 
 @app.route("/")
@@ -52,7 +69,6 @@ def get_news(search_query):
     else:
         publication = search_query.upper()
     feed = feedparser.parse(NEWS_FEEDS[publication])
-        
     return feed['entries']
     
 def get_weather(query):
@@ -70,6 +86,14 @@ def get_weather(query):
                   }
     
     return weather
+
+def get_rates(frm, to):
+    all_currency = url_request.urlopen(CURRENCY_URL).read()
+    parsed = json.loads(all_currency).get('rates')
+    frm_rate = parsed.get(frm.upper())
+    to_rate = parsed.get(to.upper())
+    
+    return to_rate / frm_rate
 
 
 if __name__ == "__main__":
